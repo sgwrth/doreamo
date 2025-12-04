@@ -13,7 +13,6 @@ namespace HPlusSport.API.Controllers
         public ProductsController(ShopContext context)
         {
             _context = context;
-
             _context.Database.EnsureCreated();
         }
 
@@ -21,22 +20,58 @@ namespace HPlusSport.API.Controllers
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
         {
             var products = await _context.Products.ToListAsync();
+
             if (products == null)
             {
                 return NotFound();
             }
+
             return Ok(products);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<Product>> GetProduct([FromRoute] int id)
         {
             var product = await _context.Products.FindAsync(id);
+
             if (product == null)
             {
                 return NotFound();
             }
+
             return Ok(product);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Product>> PostProduct(Product product)
+        {
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(
+                nameof(GetProduct),
+                new { id = product.Id },
+                product
+            );
+
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Product>> PutProduct([FromRoute] int id, [FromBody] Product product)
+        {
+            _context.Entry(product).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                if (!_context.Products.Any(p => p.Id == id))
+                {
+                    return NotFound();
+                }
+            }
+            return NoContent();
         }
     }
 }
