@@ -9,6 +9,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo_root
+    ports:
+      - "27017:27017"
     secrets:
       - mongo_root
 
