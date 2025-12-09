@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
+import type { Book } from "./types/Book";
+import { fetchBooks } from "./services/fetchBooks";
 
 export default function Books() {
-    const [books, setBooks] = useState([]);
+    const [books, setBooks] = useState<Book[]>([]);
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/books`, {
-            method: 'GET'
-        })
-        .then(response => response.json())
-        .then(books => setBooks(books))
-        .catch(error => console.error(error));
+        const loadBooks = async () => {
+            const books = await fetchBooks();
+            setBooks(books);
+        }
+        
+        loadBooks();
     }, []);
+
 
     useEffect(() => {
         console.log(books);
