@@ -1,5 +1,5 @@
-using System.Runtime.CompilerServices;
 using api.Models;
+using DotNetEnv;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -13,8 +13,10 @@ public class BooksService
         IOptions<BookStoreDatabaseSettings> bookStoreDatabaseSettings
     )
     {
+        Env.Load();
+
         var mongoClient = new MongoClient(
-            bookStoreDatabaseSettings.Value.ConnectionString
+            System.Environment.GetEnvironmentVariable("MONGO_CONNECTION_STRING")
         );
 
         var mongoDatabase = mongoClient.GetDatabase(
