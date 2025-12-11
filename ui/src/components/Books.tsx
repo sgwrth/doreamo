@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type { Book } from "./types/Book";
-import { fetchBooks } from "./services/fetchBooks";
+import type { Book } from "../types/Book";
+import { fetchBooks } from "../services/fetchBooks";
 
 export default function Books() {
     const [books, setBooks] = useState<Book[]>([]);
