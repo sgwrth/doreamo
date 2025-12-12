@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Book } from "../types/Book";
 import { fetchBooks } from "../services/fetchBooks";
+import './Books.scss';
 
 export default function Books() {
     const [books, setBooks] = useState<Book[]>([]);
@@ -24,10 +25,25 @@ export default function Books() {
     if (loading) return <div>Loading ...</div>
 
     return (
-        <div>
-            {books.map(book => (
-                <div key={book.id}>{book.bookName}</div>
-            ))}
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Book Name</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Author</th>
+                </tr>
+            </thead>
+            <tbody>
+                {books.map(book => (
+                    <tr key={book.id}>
+                        <td>{book.bookName}</td>
+                        <td>{book.price}</td>
+                        <td>{book.category}</td>
+                        <td>{book.author}</td>
+                    </tr>
+                ))}
+           </tbody>
+        </table>
     )
 }
