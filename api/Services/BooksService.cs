@@ -1,6 +1,7 @@
 using api.Models;
 using DotNetEnv;
 using Microsoft.Extensions.Options;
+using Microsoft.VisualBasic;
 using MongoDB.Driver;
 
 namespace api.Services;
@@ -30,4 +31,7 @@ public class BooksService
 
     public async Task<List<Book>> GetAsync() =>
         await _booksCollection.Find(_ => true).ToListAsync();
+
+    public async Task PostAsync(Book book) =>
+        await _booksCollection.InsertOneAsync(book);
 }

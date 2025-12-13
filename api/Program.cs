@@ -13,7 +13,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins(System.Environment.GetEnvironmentVariable("UI_DEV_SERVER")!);
+            policy.WithOrigins(System.Environment.GetEnvironmentVariable("UI_DEV_SERVER")!)
+                .AllowAnyMethod()
+                .AllowAnyHeader();
         });
 });
 

@@ -16,4 +16,8 @@ public class BooksController : ControllerBase
     [HttpGet]
     public async Task<List<Book>> Get() =>
         await _booksService.GetAsync();
+
+    [HttpPost]
+    public async Task Post(Book book) =>
+        await _booksService.PostAsync(book);
 }
