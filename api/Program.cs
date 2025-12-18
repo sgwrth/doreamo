@@ -1,6 +1,8 @@
+using api.Database;
 using api.Models;
 using api.Services;
 using DotNetEnv;
+using Scalar.AspNetCore;
 
 Env.Load();
 
@@ -8,6 +10,7 @@ var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
@@ -19,26 +22,27 @@ builder.Services.AddCors(options =>
         });
 });
 
-builder.Services.Configure<BookStoreDatabaseSettings>(
+// Database settings
+builder.Services.Configure<DbSettings>(
     builder.Configuration.GetSection("BookStoreDatabase"));
 
+// Singletons
 builder.Services.AddSingleton<BooksService>();
+builder.Services.AddSingleton<DbContext>();
 
 builder.Services.AddControllers();
-
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi("v1"); // Intentionally explicit, 'v1' is already default.
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(); // Add Scalar.
 }
 
 app.UseHttpsRedirection();
-
 app.UseCors(MyAllowSpecificOrigins);
-
 app.UseAuthorization();
 
 app.MapControllers();

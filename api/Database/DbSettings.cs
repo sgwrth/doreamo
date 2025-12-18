@@ -1,6 +1,6 @@
-namespace api.Models;
+namespace api.Database;
 
-public class BookStoreDatabaseSettings
+public class DbSettings
 {
     public string ConnectionString { get; set; } = null!;
     public string DatabaseName { get; set; } = null!;

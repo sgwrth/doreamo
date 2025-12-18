@@ -1,7 +1,7 @@
+using api.Database;
 using api.Models;
 using DotNetEnv;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualBasic;
 using MongoDB.Driver;
 
 namespace api.Services;
@@ -11,21 +11,12 @@ public class BooksService
     private readonly IMongoCollection<Book> _booksCollection;
 
     public BooksService(
-        IOptions<BookStoreDatabaseSettings> bookStoreDatabaseSettings
+        IOptions<DbSettings> dbSettings,
+        DbContext dbContext
     )
     {
-        Env.Load();
-
-        var mongoClient = new MongoClient(
-            System.Environment.GetEnvironmentVariable("MONGO_CONNECTION_STRING")
-        );
-
-        var mongoDatabase = mongoClient.GetDatabase(
-            bookStoreDatabaseSettings.Value.DatabaseName
-        );
-
-        _booksCollection = mongoDatabase.GetCollection<Book>(
-            bookStoreDatabaseSettings.Value.BooksCollectionName
+        _booksCollection = dbContext.MongoDatabase.GetCollection<Book>(
+            dbSettings.Value.BooksCollectionName
         );
     }
 
