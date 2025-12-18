@@ -1,41 +1,57 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using api.Database;
 using api.Models;
 using DotNetEnv;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 
 namespace api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-// Using primary constructor to inject configuration from appsettings.json.
-public class AuthController(IConfiguration configuration): ControllerBase
+public class AuthController(
+    IConfiguration configuration,
+    DbContext dbContext,
+    IOptions<DbSettings> dbSettings
+): ControllerBase
 {
-    public static User user = new ();
+    private readonly IMongoCollection<User> _usersCollection = dbContext.MongoDatabase
+        .GetCollection<User>(dbSettings.Value.UsersCollectionName);
 
     [HttpPost("register")]
-    public ActionResult<User> Register(UserDto request)
+    public async Task RegisterAsync(UserDto request)
     {
+        var user = new User();
+
         var hashedPassword = new PasswordHasher<User>()
             .HashPassword(user, request.Password);
 
         user.Username = request.Username;
         user.PasswordHash = hashedPassword;
 
-        return Ok(user);
+        await _usersCollection.InsertOneAsync(user);
     }
 
     [HttpPost("login")]
-    public ActionResult<string> Login(UserDto request)
+    public async Task<ActionResult<string>> LoginAsync(UserDto request)
     {
-        if (user.Username != request.Username)
+        if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
         {
-            return BadRequest("Error: user not found.");
+            return BadRequest("Missing login data.");
         }
-        
+
+        var user = await _usersCollection.Find(user => user.Username == request.Username).FirstOrDefaultAsync();
+
+        if (user == null)
+        {
+            return Unauthorized("Username and/or password invalid.");
+        }
+
         if (new PasswordHasher<User>()
                 .VerifyHashedPassword(
                     user,
@@ -44,7 +60,7 @@ public class AuthController(IConfiguration configuration): ControllerBase
                 )
                 == PasswordVerificationResult.Failed)
         {
-            return BadRequest("Error: wrong password.");
+            return Unauthorized("Username and/or password invalid.");
         }
 
         var token = CreateToken(user);
