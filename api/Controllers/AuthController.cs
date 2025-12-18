@@ -24,17 +24,29 @@ public class AuthController(
         .GetCollection<User>(dbSettings.Value.UsersCollectionName);
 
     [HttpPost("register")]
-    public async Task RegisterAsync(UserDto request)
+    public async Task<ActionResult> RegisterAsync(UserDto request)
     {
-        var user = new User();
+        if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
+        {
+            return BadRequest("Missing registration data.");
+        }
+
+        if (await _usersCollection.Find(user => user.Username == request.Username).AnyAsync())
+        {
+            return BadRequest("Registration failed.");
+        }
+
+        var newUser = new User();
 
         var hashedPassword = new PasswordHasher<User>()
-            .HashPassword(user, request.Password);
+            .HashPassword(newUser, request.Password);
 
-        user.Username = request.Username;
-        user.PasswordHash = hashedPassword;
+        newUser.Username = request.Username;
+        newUser.PasswordHash = hashedPassword;
 
-        await _usersCollection.InsertOneAsync(user);
+        await _usersCollection.InsertOneAsync(newUser);
+
+        return Ok("Registration successful.");
     }
 
     [HttpPost("login")]
