@@ -3,6 +3,7 @@ import type { Book } from "../types/Book";
 import { fetchBooks } from "../services/fetchBooks";
 import './Books.scss';
 import BookForm from "./BookForm";
+import { Counter } from "./Counter";
 
 export default function Books() {
     const [books, setBooks] = useState<Book[]>([]);
