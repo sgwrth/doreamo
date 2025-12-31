@@ -1,5 +1,6 @@
 using api.Models;
 using api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -13,6 +14,7 @@ public class BooksController : ControllerBase
     public BooksController(BooksService booksService) =>
         _booksService = booksService;
 
+    [Authorize]
     [HttpGet]
     public async Task<List<Book>> Get() =>
         await _booksService.GetAsync();

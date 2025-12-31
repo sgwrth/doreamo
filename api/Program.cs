@@ -1,7 +1,9 @@
+using System.Text;
 using api.Database;
-using api.Models;
 using api.Services;
 using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
 Env.Load();
@@ -33,6 +35,25 @@ builder.Services.AddSingleton<AuthService>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi("v1"); // Intentionally explicit, 'v1' is already default.
+
+// JWT Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["AppSettings:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["AppSettings:Audience"],
+            ValidateLifetime = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(System.Environment.GetEnvironmentVariable("JWT_KEY")!)
+            ),
+            ValidateIssuerSigningKey = true,
+        };
+    }
+    );
 
 var app = builder.Build();
 

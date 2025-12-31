@@ -23,10 +23,8 @@ public class AuthService(IConfiguration configuration)
             Encoding.UTF8.GetBytes(System.Environment.GetEnvironmentVariable("JWT_KEY")!)
         );
 
-        // Signing credentials.
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
-        // Token descriptor.
         var tokenDescriptor = new JwtSecurityToken(
             issuer: configuration.GetValue<string>("AppSettings:Issuer"),
             audience: configuration.GetValue<string>("AppSettings:Audience"),
