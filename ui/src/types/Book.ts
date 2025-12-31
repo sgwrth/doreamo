@@ -4,4 +4,4 @@ export interface Book {
     price: number,
     category: string,
     author: string,
-}
+};

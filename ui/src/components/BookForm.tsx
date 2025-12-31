@@ -92,5 +92,5 @@ export default function BookForm({ books, onUpdateBooks }: BookFormProps) {
                 </div>
             </form>
         </>
-    )
+    );
 }
