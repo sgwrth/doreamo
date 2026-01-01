@@ -42,6 +42,7 @@ public class AuthController(
 
         newUser.Username = request.Username;
         newUser.PasswordHash = hashedPassword;
+        newUser.Roles = [Role.User];
 
         await _usersCollection.InsertOneAsync(newUser);
 
@@ -80,7 +81,7 @@ public class AuthController(
         var token = authService.CreateToken(user);
 
         {
-            return Ok(new TokenResponse(token));
+            return Ok(new LoginResponse(token, user.Roles));
         }
     }
 }

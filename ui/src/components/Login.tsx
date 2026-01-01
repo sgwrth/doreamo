@@ -3,7 +3,7 @@ import type { Credentials } from "../types/Credentials";
 import logIn from "../services/logIn";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { setUser } from '../user/userSlice';
-import type { TokenResponse } from "../types/TokenResponse";
+import type { LoginResponse } from "../types/LoginResponse";
 
 export default function Login() {
   const user = useAppSelector((state) => state.user);
@@ -18,8 +18,12 @@ export default function Login() {
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const tokenResponse: TokenResponse = await logIn(credentials);
-    dispatch(setUser({ username: credentials.username, token: tokenResponse.token }));
+    const LoginResponse: LoginResponse = await logIn(credentials);
+    dispatch(setUser({
+      username: credentials.username,
+      token: LoginResponse.token,
+      roles: LoginResponse.roles,
+    }));
     console.log(user);
   };
 

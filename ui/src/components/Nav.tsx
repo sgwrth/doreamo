@@ -6,7 +6,11 @@ export default function Nav() {
   const dispatch = useAppDispatch();
 
   function logOut() {
-    dispatch(setUser({ username: '', token: '' }));
+    dispatch(setUser({
+      username: '',
+      token: '',
+      roles: [],
+    }));
   };
 
   return (
