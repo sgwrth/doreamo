@@ -80,7 +80,7 @@ public class AuthController(
         var token = authService.CreateToken(user);
 
         {
-            return Ok(token);
+            return Ok(new TokenResponse(token));
         }
     }
 }
