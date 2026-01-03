@@ -19,6 +19,7 @@ public class BooksController : ControllerBase
     public async Task<List<Book>> Get() =>
         await _booksService.GetAsync();
 
+    [Authorize(Roles = "admin")]
     [HttpPost]
     public async Task Post(Book book) =>
         await _booksService.PostAsync(book);

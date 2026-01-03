@@ -4,6 +4,7 @@ import logIn from "../services/logIn";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { setUser } from '../user/userSlice';
 import type { LoginResponse } from "../types/LoginResponse";
+import isLoggedIn from "../lib/isLoggedIn";
 
 export default function Login() {
   const user = useAppSelector((state) => state.user);
@@ -33,14 +34,11 @@ export default function Login() {
     });
   };
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   return (
     <>
       <h2>Login</h2>
-      
+
+      {!isLoggedIn(user) && 
       <form onSubmit={handleLogin}>
 
         <label htmlFor="username">Username</label>
@@ -51,7 +49,9 @@ export default function Login() {
 
         <button type="submit">Log in</button>
 
-      </form>
+      </form>}
+
+      {isLoggedIn(user) && <div>You are logged in!</div>}
     </>
   );
 }

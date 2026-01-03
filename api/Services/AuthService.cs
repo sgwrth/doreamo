@@ -15,8 +15,13 @@ public class AuthService(IConfiguration configuration)
 
         var claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.Name, user.Username)
+            new Claim(ClaimTypes.Name, user.Username),
         };
+
+        foreach (string role in user.Roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         // Signing key.
         var key = new SymmetricSecurityKey(

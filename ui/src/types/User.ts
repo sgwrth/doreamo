@@ -1,5 +1,5 @@
 export interface User {
     username: string,
-    roles: [string],
+    roles: string[],
     token: string,
 }
