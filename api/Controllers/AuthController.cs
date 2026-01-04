@@ -79,9 +79,10 @@ public class AuthController(
         }
 
         var token = authService.CreateToken(user);
+        var refreshToken = authService.GenerateAndStoreRefreshTokenAsync(user);
 
         {
-            return Ok(new LoginResponse(token, user.Roles));
+            return Ok(new LoginResponse(token, await refreshToken, user.Roles));
         }
     }
 }
