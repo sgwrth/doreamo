@@ -69,9 +69,36 @@ public class AuthService(
         var filter = Builders<User>.Filter.Eq(u => u.Username, user.Username);
         var update = Builders<User>.Update.Combine(
             Builders<User>.Update.Set("RefreshToken", refreshToken),
-            Builders<User>.Update.Set("RefreshTokenExpiryDate", refreshTokenExpiryTime)
+            Builders<User>.Update.Set("RefreshTokenExpiryTime", refreshTokenExpiryTime)
         );
         await _usersCollection.UpdateOneAsync(filter, update);
         return refreshToken;
+    }
+
+    public async Task<User?> ValidateRefreshToken(string username, string refreshToken)
+    {
+        var user = await _usersCollection.Find(user => user.Username == username).FirstOrDefaultAsync();
+
+        if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        {
+            return null;
+        }
+
+        return user;
+    }
+
+    public async Task<LoginResponse?> RefreshTokensAsync(RefreshTokenRequest request)
+    {
+        var user = await ValidateRefreshToken(request.Username, request.RefreshToken);
+
+        if (user == null)
+        {
+            return null;
+        }
+
+        var token = CreateToken(user);
+        var refreshToken = await GenerateAndStoreRefreshTokenAsync(user);
+
+        return new LoginResponse(token, refreshToken, user.Roles);
     }
 }

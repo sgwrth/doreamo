@@ -79,10 +79,21 @@ public class AuthController(
         }
 
         var token = authService.CreateToken(user);
-        var refreshToken = authService.GenerateAndStoreRefreshTokenAsync(user);
+        var refreshToken = await authService.GenerateAndStoreRefreshTokenAsync(user);
 
+        return Ok(new LoginResponse(token, refreshToken, user.Roles));
+    }
+
+    [HttpPost("refreshtokens")]
+    public async Task<ActionResult<LoginResponse>> RefreshTokensAsync(RefreshTokenRequest request)
+    {
+        var result = await authService.RefreshTokensAsync(request);
+
+        if (result is null || result.Token is null || result.RefreshToken is null)
         {
-            return Ok(new LoginResponse(token, await refreshToken, user.Roles));
+            return Unauthorized("Invalid refresh token");
         }
+
+        return Ok(result);
     }
 }
