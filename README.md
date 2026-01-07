@@ -6,7 +6,7 @@ commands to run initially, as well as Bash scripts for connecting to the DB usin
 Mongosh.
 
 # Features included so far
-- Basic JWT authentication
+- Basic JWT authentication (incl. refresh token)
 
 # Possible future features
 - Redis
