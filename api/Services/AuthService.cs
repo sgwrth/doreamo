@@ -45,7 +45,8 @@ public class AuthService(
             issuer: configuration.GetValue<string>("AppSettings:Issuer"),
             audience: configuration.GetValue<string>("AppSettings:Audience"),
             claims: claims,
-            expires: DateTime.UtcNow.AddDays(1),
+            // expires: DateTime.UtcNow.AddMinutes(2),
+            expires: DateTime.Now.AddMinutes(2),
             signingCredentials: creds
         );
 
@@ -79,7 +80,7 @@ public class AuthService(
     {
         var user = await _usersCollection.Find(user => user.Username == username).FirstOrDefaultAsync();
 
-        if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
         {
             return null;
         }
