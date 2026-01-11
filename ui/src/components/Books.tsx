@@ -3,10 +3,14 @@ import type { Book } from "../types/Book";
 import { fetchBooks } from "../services/fetchBooks";
 import './Books.scss';
 import BookForm from "./BookForm";
-import { useAppSelector } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import refreshTokens from "../services/refreshTokens";
+import type { RefreshedTokens } from "../types/RefreshedTokens";
+import { setUser } from "../user/userSlice";
 
 export default function Books() {
   const user = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
@@ -14,8 +18,23 @@ export default function Books() {
   const loadBooks = async () => {
     setLoading(true);
     const books = await fetchBooks(user.token);
-    setBooks(books);
-    setLoading(false);
+    if (books !== undefined) {
+      setBooks(books);
+      setLoading(false);
+    } else {
+      const refreshedTokens: RefreshedTokens = await refreshTokens(user);
+      dispatch(setUser({
+        username: user.username,
+        roles: user.roles,
+        token: refreshedTokens.token,
+        refreshToken: refreshedTokens.refreshToken,
+      }));
+      const books = await fetchBooks(refreshedTokens.token);
+      if (books !== undefined) {
+        setBooks(books);
+        setLoading(false);
+      }
+    }
   }
 
   useEffect(() => {
