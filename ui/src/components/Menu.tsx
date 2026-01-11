@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import './Menu.scss';
 
 type MenuProps = {
-  // displayMenu: boolean,
   onHideNav: () => void,
 };
 
@@ -17,37 +16,38 @@ export default function Menu({ onHideNav }: MenuProps) {
     dispatch(setUser({
       username: '',
       token: '',
+      refreshToken: '',
       roles: [''],
     }));
   };
 
   return (
-    <>
-      <div className="menu-container">
-        <Link className="nav-a" to="/">
+    <div className="menu-container" onClick={() => onHideNav()}>
+      <div className="menu">
+        <Link className="nav-link" to="/">
           <button onClick={() => onHideNav()} className="nav-item-button">Home</button>
         </Link>
 
         {!isLoggedIn(user) &&
-          <Link className="nav-a" to="/login">
+          <Link className="nav-link" to="/login">
             <button onClick={() => onHideNav()} className="nav-item-button">Login</button>
           </Link>}
 
         {isLoggedIn(user) &&
-          <Link className="nav-a" to="/books">
+          <Link className="nav-link" to="/books">
             <button onClick={() => onHideNav()} className="nav-item-button">Books</button>
           </Link>}
 
-        <Link className="nav-a" to="/counter">
+        <Link className="nav-link" to="/counter">
           <button onClick={() => onHideNav()} className="nav-item-button">Counter</button>
         </Link>
 
         {isLoggedIn(user) &&
-          <Link className="nav-a" to="/">
+          <Link className="nav-link" to="/">
             <button onClick={() => { onHideNav(); logOut}} className="nav-item-button" type="button">Log out</button>
           </Link>
         }
       </div>
-    </>
+    </div>
   )
 }

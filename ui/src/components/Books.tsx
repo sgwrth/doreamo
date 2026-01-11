@@ -48,7 +48,7 @@ export default function Books() {
   if (loading) return <div>Loading ...</div>
 
   return (
-    <>
+    <div className="body-main">
       <h2>Books</h2>
 
       <table>
@@ -72,6 +72,6 @@ export default function Books() {
         </tbody>
       </table>
       <BookForm books={books} onUpdateBooks={loadBooks} />
-    </>
+    </div>
   );
 }
