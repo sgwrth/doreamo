@@ -1,5 +1,5 @@
 import Menu from "./Menu.tsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import './Nav.scss';
 
 export default function Nav() {
@@ -13,6 +13,16 @@ export default function Nav() {
       setDisplayMenu(true);
     }
   }
+
+  useEffect(() => {
+    if (displayMenu) {
+      document.body.style.overflow = 'hidden';
+    };
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [displayMenu]);
 
   return (
     <>
