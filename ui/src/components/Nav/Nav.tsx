@@ -1,4 +1,4 @@
-import Menu from "./Menu.tsx";
+import Menu from "./Menu/Menu.tsx";
 import { useEffect, useState } from "react";
 import './Nav.scss';
 

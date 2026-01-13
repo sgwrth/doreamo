@@ -1,7 +1,7 @@
 import { Link } from "react-router";
-import isLoggedIn from "../lib/isLoggedIn";
-import { setUser } from "../user/userSlice";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+import isLoggedIn from "../../../lib/isLoggedIn";
+import { setUser } from "../../../user/userSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import './Menu.scss';
 
 type MenuProps = {
@@ -24,29 +24,48 @@ export default function Menu({ onHideNav }: MenuProps) {
   return (
     <div className="menu-container" onClick={() => onHideNav()}>
       <div className="menu">
+
         <Link className="nav-link" to="/">
-          <button onClick={() => onHideNav()} className="nav-item-button">Home</button>
+          <button
+              onClick={() => onHideNav()}
+              className="nav-item-button"
+          >
+            Home
+          </button>
         </Link>
 
         {!isLoggedIn(user) &&
           <Link className="nav-link" to="/login">
-            <button onClick={() => onHideNav()} className="nav-item-button">Login</button>
+            <button
+                onClick={() => onHideNav()}
+                className="nav-item-button"
+            >
+              Login
+            </button>
           </Link>}
 
         {isLoggedIn(user) &&
           <Link className="nav-link" to="/books">
-            <button onClick={() => onHideNav()} className="nav-item-button">Books</button>
+            <button
+                onClick={() => onHideNav()}
+                className="nav-item-button"
+            >
+              Books
+            </button>
           </Link>}
-
-        <Link className="nav-link" to="/counter">
-          <button onClick={() => onHideNav()} className="nav-item-button">Counter</button>
-        </Link>
 
         {isLoggedIn(user) &&
           <Link className="nav-link" to="/">
-            <button onClick={() => { onHideNav(); logOut}} className="nav-item-button" type="button">Log out</button>
+            <button
+                onClick={() => { onHideNav(); logOut }}
+                className="nav-item-button"
+                type="button"
+            >
+              Log out
+            </button>
           </Link>
         }
+
       </div>
     </div>
   )

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import type { Book } from "../types/Book";
-import { fetchBooks } from "../services/fetchBooks";
+import { fetchBooks } from "../../services/fetchBooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { setUser } from "../../user/userSlice";
+import BookForm from "../Books/BooksForm/BookForm";
+import refreshTokens from "../../services/refreshTokens";
+import type { RefreshedTokens } from "../../types/RefreshedTokens";
+import type { Book } from "../../types/Book";
 import './Books.scss';
-import BookForm from "./BookForm";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import refreshTokens from "../services/refreshTokens";
-import type { RefreshedTokens } from "../types/RefreshedTokens";
-import { setUser } from "../user/userSlice";
 
 export default function Books() {
   const user = useAppSelector((state) => state.user);
@@ -41,10 +41,6 @@ export default function Books() {
     loadBooks();
   }, []);
 
-  useEffect(() => {
-    console.log(`les books: ${books}`);
-  }, [books])
-
   if (loading) return <div>Loading ...</div>
 
   return (
@@ -71,7 +67,7 @@ export default function Books() {
           ))}
         </tbody>
       </table>
-      <BookForm books={books} onUpdateBooks={loadBooks} />
+      <BookForm onUpdateBooks={loadBooks} />
     </div>
   );
 }

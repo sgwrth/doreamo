@@ -1,15 +1,14 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useAppSelector } from '../../../store/hooks';
+import postBook from '../../../services/postBook';
+import type { Book } from '../../../types/Book';
 import './BookForm.scss';
-import type { Book } from '../types/Book';
-import postBook from '../services/postBook';
-import { useAppSelector } from '../store/hooks';
 
 type BookFormProps = {
-  books: Book[];
   onUpdateBooks: () => void;
 };
 
-export default function BookForm({ books, onUpdateBooks }: BookFormProps) {
+export default function BookForm({ onUpdateBooks }: BookFormProps) {
   const user = useAppSelector((state) => state.user);
 
   const initialBook: Book = {
@@ -32,10 +31,6 @@ export default function BookForm({ books, onUpdateBooks }: BookFormProps) {
     await postBook(book, user.token);
     onUpdateBooks();
   }
-
-  useEffect(() => {
-    console.log(`number of books: ${books.length}`);
-  });
 
   return (
     <>
