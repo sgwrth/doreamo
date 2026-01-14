@@ -57,7 +57,7 @@ export default function Menu({ onHideNav }: MenuProps) {
         {isLoggedIn(user) &&
           <Link className="nav-link" to="/">
             <button
-                onClick={() => { onHideNav(); logOut }}
+                onClick={() => { onHideNav(); logOut() }}
                 className="nav-item-button"
                 type="button"
             >
