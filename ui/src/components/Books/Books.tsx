@@ -44,30 +44,33 @@ export default function Books() {
   if (loading) return <div>Loading ...</div>
 
   return (
-    <div className="body-main">
-      <h2>Books</h2>
+    <>
+      <div className="cell">
+        <h2>Books</h2>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Book Name</th>
-            <th>Price</th>
-            <th>Category</th>
-            <th>Author</th>
-          </tr>
-        </thead>
-        <tbody>
-          {books.map(book => (
-            <tr key={book.id}>
-              <td>{book.bookName}</td>
-              <td>{book.price}</td>
-              <td>{book.category}</td>
-              <td>{book.author}</td>
+        <table>
+          <thead>
+            <tr>
+              <th>Book Name</th>
+              <th>Price</th>
+              <th>Category</th>
+              <th>Author</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {books.map(book => (
+              <tr key={book.id}>
+                <td>{book.bookName}</td>
+                <td>{book.price}</td>
+                <td>{book.category}</td>
+                <td>{book.author}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
       <BookForm onUpdateBooks={loadBooks} />
-    </div>
+    </>
   );
 }

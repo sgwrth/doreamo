@@ -37,7 +37,7 @@ export default function Login() {
   };
 
   return (
-    <>
+    <div className="cell">
       <h2>Login</h2>
 
       {!isLoggedIn(user) && 
@@ -58,6 +58,6 @@ export default function Login() {
           <div>You are logged in!</div>
           <div onClick={() => refreshTokens(user)}>[Refresh your token]</div>
         </div>}
-    </>
+    </div>
   );
 }

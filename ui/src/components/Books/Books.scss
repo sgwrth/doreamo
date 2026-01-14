@@ -1,8 +1,4 @@
-$grey: #d0d0d0;
-
-.body-main {
-
-}
+$primary: #300010;
 
 table {
     border-collapse: collapse;
@@ -14,7 +10,7 @@ td {
 }
 
 th {
-    background-color: $grey;
+    background-color: $primary;
     border: solid 1px #000;
     padding: 0.5rem;
 }

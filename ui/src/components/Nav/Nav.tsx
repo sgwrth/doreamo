@@ -26,10 +26,8 @@ export default function Nav() {
 
   return (
     <>
-      <div>
-        <button className="menu-button" type="button" onClick={menu}>Menu</button>
-        {displayMenu && <Menu onHideNav={menu} />}
-      </div>
+      <button className="menu-button" type="button" onClick={menu}>Menu</button>
+      {displayMenu && <Menu onHideNav={menu} />}
     </>
   );
 }

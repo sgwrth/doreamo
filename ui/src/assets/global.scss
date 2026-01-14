@@ -1,0 +1,17 @@
+$primary: #300010;
+$secondary: #c0b060;
+$tertiary: #a00040;
+
+body {
+  background-color: $primary;
+}
+
+div.cell {
+  margin: 2.0rem;
+  padding: 1.0rem;
+  border: solid 0.2rem #c0b060;
+  border-radius: 1.0rem;
+  background-color: $tertiary;
+  color: $secondary;
+  font-weight: bold;
+}
