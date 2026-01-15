@@ -49,7 +49,9 @@ export default function Login() {
           <label htmlFor="password">Password</label>
           <input id="password" name="password" type="password" onChange={handleChange} />
 
-          <button type="submit">Log in</button>
+          <div>
+            <button className="std" type="submit">Log in</button>
+          </div>
 
         </form>}
 

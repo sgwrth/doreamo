@@ -4,6 +4,17 @@ $tertiary: #a00040;
 
 body {
   background-color: $primary;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+button.std {
+  border-radius: 0.5rem;
+  height: 1.5rem;
+  font-size: 1.0rem;
+  color: $primary;
+  background-color: $secondary;
+  outline: none;
+  border: none;
 }
 
 div.cell {
@@ -14,4 +25,20 @@ div.cell {
   background-color: $tertiary;
   color: $secondary;
   font-weight: bold;
+}
+
+input {
+  border-radius: 0.5rem;
+  height: 1.5rem;
+  font-size: 1.0rem;
+  background-color: $primary;
+  margin-bottom: 0.5rem;
+  outline: none;
+  border: none;
+  color: $secondary;
+  padding: 0.0rem 0.5rem;
+}
+
+label {
+  margin-bottom: 0.25rem;
 }

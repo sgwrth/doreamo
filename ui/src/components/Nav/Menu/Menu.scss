@@ -1,3 +1,7 @@
+$primary: #300010;
+$secondary: #c0b060;
+$tertiary: #a00040;
+
 .menu-container {
   position: absolute;
   border-radius: 0.0rem;
@@ -15,18 +19,26 @@
   left: 2.0rem;
 }
 
+.menu-item {
+  border-radius: 0.5rem;
+  color: $primary;
+}
+
 .nav-link {
   text-decoration: none;
 }
 
 .nav-item-button {
   display: block;
-  background-color: #e0d0f0;
+  background-color: $tertiary;
   width: 5.0rem;
   padding: 0.5rem;
   border: none;
+  color: $secondary;
+  font-weight: bold;
+  border-radius: 0.5rem;
 }
 
 .nav-item-button:hover {
-  background-color: #f0c0d0;
+  background-color: $primary;
 }

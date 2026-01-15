@@ -23,7 +23,7 @@ export default function Menu({ onHideNav }: MenuProps) {
 
   return (
     <div className="menu-container" onClick={() => onHideNav()}>
-      <div className="menu">
+      <div className="cell menu">
 
         <Link className="nav-link" to="/">
           <button

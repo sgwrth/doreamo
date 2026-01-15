@@ -87,7 +87,7 @@ export default function BookForm({ onUpdateBooks }: BookFormProps) {
           </div>
 
           <div>
-            <button type="submit" data-testid="submit">Insert</button>
+            <button className="std" type="submit" data-testid="submit">Insert</button>
           </div>
         </form>
 
