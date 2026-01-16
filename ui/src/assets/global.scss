@@ -9,12 +9,12 @@ body {
 
 button.std {
   border-radius: 0.5rem;
-  height: 1.5rem;
   font-size: 1.0rem;
   color: $primary;
   background-color: $secondary;
   outline: none;
   border: none;
+  padding: 0.5rem 0.75rem;
 }
 
 div.cell {
@@ -36,7 +36,7 @@ input {
   outline: none;
   border: none;
   color: $secondary;
-  padding: 0.0rem 0.5rem;
+  padding: 0.5rem 0.75rem;
 }
 
 label {

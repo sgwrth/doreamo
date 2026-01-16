@@ -23,4 +23,9 @@ public class BooksController : ControllerBase
     [HttpPost]
     public async Task Post(Book book) =>
         await _booksService.PostAsync(book);
+
+    [Authorize]
+    [HttpDelete]
+    public async Task Delete(Book book) =>
+        await _booksService.DeleteAsync(book);
 }

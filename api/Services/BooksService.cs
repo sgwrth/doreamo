@@ -25,4 +25,10 @@ public class BooksService
 
     public async Task PostAsync(Book book) =>
         await _booksCollection.InsertOneAsync(book);
+
+    public async Task DeleteAsync(Book book)
+    {
+        var filter = Builders<Book>.Filter.Eq("_id", book.Id);
+        await _booksCollection.DeleteOneAsync(filter);
+    }
 }
