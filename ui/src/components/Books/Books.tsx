@@ -7,6 +7,11 @@ import refreshTokens from "../../services/refreshTokens";
 import type { RefreshedTokens } from "../../types/RefreshedTokens";
 import type { Book } from "../../types/Book";
 import './Books.scss';
+import deleteBook from "../../services/deleteBook";
+
+function saySomething(text: string) {
+  console.log(text);
+};
 
 export default function Books() {
   const user = useAppSelector((state) => state.user);
@@ -41,7 +46,11 @@ export default function Books() {
     loadBooks();
   }, []);
 
-  if (loading) return <div>Loading ...</div>
+  if (loading) return (
+    <div className="cell">
+      Loading ...
+    </div>
+  )
 
   return (
     <>
@@ -55,6 +64,7 @@ export default function Books() {
               <th>Price</th>
               <th>Category</th>
               <th>Author</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -64,6 +74,12 @@ export default function Books() {
                 <td>{book.price}</td>
                 <td>{book.category}</td>
                 <td>{book.author}</td>
+                <td><button
+                  className="std"
+                  onClick={() => deleteBook({bookId: book.id}, user.token)}
+                >
+                  X
+                </button></td>
               </tr>
             ))}
           </tbody>

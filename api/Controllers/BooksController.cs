@@ -26,6 +26,6 @@ public class BooksController : ControllerBase
 
     [Authorize]
     [HttpDelete]
-    public async Task Delete(Book book) =>
-        await _booksService.DeleteAsync(book);
+    public async Task Delete(DeleteBookRequest req) =>
+        await _booksService.DeleteAsync(req.BookId);
 }

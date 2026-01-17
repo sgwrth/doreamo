@@ -26,9 +26,9 @@ public class BooksService
     public async Task PostAsync(Book book) =>
         await _booksCollection.InsertOneAsync(book);
 
-    public async Task DeleteAsync(Book book)
+    public async Task DeleteAsync(string id)
     {
-        var filter = Builders<Book>.Filter.Eq("_id", book.Id);
+        var filter = Builders<Book>.Filter.Eq(x => x.Id, id);
         await _booksCollection.DeleteOneAsync(filter);
     }
 }
