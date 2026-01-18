@@ -32,6 +32,7 @@ builder.Services.Configure<DbSettings>(
 builder.Services.AddSingleton<BooksService>();
 builder.Services.AddSingleton<DbContext>();
 builder.Services.AddSingleton<AuthService>();
+builder.Services.AddSingleton<ReviewsService>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi("v1"); // Intentionally explicit, 'v1' is already default.

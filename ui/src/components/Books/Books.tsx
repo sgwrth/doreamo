@@ -73,9 +73,12 @@ export default function Books() {
                 <td>{book.price}</td>
                 <td>{book.category}</td>
                 <td>{book.author}</td>
-                <td><button
-                  className="std"
-                  onClick={async () => { await deleteBook({bookId: book.id}, user.token); await loadBooks()}}
+                <td className="center"><button
+                  className="std bold"
+                  onClick={async () => {
+                    await deleteBook({bookId: book.id}, user.token);
+                    await loadBooks()
+                  }}
                 >
                   X
                 </button></td>

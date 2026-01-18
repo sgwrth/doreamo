@@ -1,6 +1,6 @@
 namespace api.Models;
 
-public class DeleteBookRequest
+public class BookDeleteRequest
 {
     public required string BookId { get; set; }
 }
