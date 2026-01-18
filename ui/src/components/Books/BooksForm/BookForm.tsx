@@ -12,6 +12,7 @@ export default function BookForm({ onUpdateBooks }: BookFormProps) {
   const user = useAppSelector((state) => state.user);
 
   const initialBook: Book = {
+    id: '',
     bookName: '',
     price: 0.0,
     category: '',

@@ -4,14 +4,10 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { setUser } from "../../user/userSlice";
 import BookForm from "../Books/BooksForm/BookForm";
 import refreshTokens from "../../services/refreshTokens";
+import deleteBook from "../../services/deleteBook";
 import type { RefreshedTokens } from "../../types/RefreshedTokens";
 import type { Book } from "../../types/Book";
 import './Books.scss';
-import deleteBook from "../../services/deleteBook";
-
-function saySomething(text: string) {
-  console.log(text);
-};
 
 export default function Books() {
   const user = useAppSelector((state) => state.user);
@@ -22,23 +18,26 @@ export default function Books() {
 
   const loadBooks = async () => {
     setLoading(true);
-    const books = await fetchBooks(user.token);
+    let books = await fetchBooks(user.token);
+
     if (books !== undefined) {
       setBooks(books);
       setLoading(false);
-    } else {
-      const refreshedTokens: RefreshedTokens = await refreshTokens(user);
-      dispatch(setUser({
-        username: user.username,
-        roles: user.roles,
-        token: refreshedTokens.token,
-        refreshToken: refreshedTokens.refreshToken,
-      }));
-      const books = await fetchBooks(refreshedTokens.token);
-      if (books !== undefined) {
-        setBooks(books);
-        setLoading(false);
-      }
+      return;
+    }
+
+    const refreshedTokens: RefreshedTokens = await refreshTokens(user);
+    dispatch(setUser({
+      username: user.username,
+      roles: user.roles,
+      token: refreshedTokens.token,
+      refreshToken: refreshedTokens.refreshToken,
+    }));
+    books = await fetchBooks(refreshedTokens.token);
+
+    if (books !== undefined) {
+      setBooks(books);
+      setLoading(false);
     }
   }
 
@@ -76,7 +75,7 @@ export default function Books() {
                 <td>{book.author}</td>
                 <td><button
                   className="std"
-                  onClick={() => deleteBook({bookId: book.id}, user.token)}
+                  onClick={async () => { await deleteBook({bookId: book.id}, user.token); await loadBooks()}}
                 >
                   X
                 </button></td>
