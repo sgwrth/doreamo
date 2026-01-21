@@ -18,6 +18,7 @@ export default function Books() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [showReviews, setShowReviews] = useState<boolean>(false);
 
   const loadBooks = async () => {
     setLoading(true);
@@ -42,6 +43,10 @@ export default function Books() {
       setBooks(books);
       setLoading(false);
     }
+  }
+
+  function toggleShowReviews() {
+    setShowReviews((showReviews) ? false : true);
   }
 
   useEffect(() => {
@@ -78,24 +83,35 @@ export default function Books() {
                   <td>{book.price}</td>
                   <td>{book.category}</td>
                   <td>{book.author}</td>
-                  <td onClick={async () => setReviews(await fetchReviews(book.id))}>Show</td>
+                  <td onClick={async () => {
+                    setReviews(await fetchReviews(book.id));
+                    toggleShowReviews();
+                  }}>
+                    {showReviews && reviews?.some(review => review.bookId === book.id)
+                      ? <span>Hide</span>
+                      : <span>Show</span>
+                    }
+                  </td>
                   <td className="center"><button
                     className="std bold"
                     onClick={async () => {
                       await deleteBook({bookId: book.id}, user.token);
-                      await loadBooks()
+                      await loadBooks();
                     }}
                   >
                     X
                   </button></td>
                 </tr>
-                {reviews.length > 0 && reviews.some(review => review.bookId === book.id) &&
+                {reviews.length > 0
+                    && reviews.some(review => review.bookId === book.id)
+                    && showReviews
+                    &&
                   <tr>
                     <td colSpan={6}>
                       {reviews.map(review => (
                         <div>
                           <div>Review by: {review.author} | Rating: {review.rating}</div>
-                          <div><em>"{review.text}"</em></div>
+                          <div className="mb-1"><em>"{review.text}"</em></div>
                         </div>
                       ))}
                     </td>
