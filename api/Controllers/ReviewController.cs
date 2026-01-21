@@ -24,4 +24,8 @@ public class ReviewController : ControllerBase
     [HttpGet("{bookId}")]
     public async Task<List<Review>> GetReview(string bookId) =>
         await _reviewsService.GetReviewAsync(bookId);
+
+    [HttpGet("numbers")]
+    public async Task<Dictionary<string, int>> GetReviewNumbers() =>
+        await _reviewsService.GetReviewNumbersAsync();
 }
