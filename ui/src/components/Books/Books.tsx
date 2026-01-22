@@ -10,6 +10,8 @@ import type { Book } from "../../types/Book";
 import './Books.scss';
 import type { Review } from "../../types/Review";
 import { fetchReviews } from "../../services/fetchReviews";
+import fetchReviewNumbers from "../../services/fetchReviewNumbers";
+import type { ReviewNumber } from "../../types/ReviewNumber";
 
 export default function Books() {
   const user = useAppSelector((state) => state.user);
@@ -19,6 +21,13 @@ export default function Books() {
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [showReviews, setShowReviews] = useState<boolean>(false);
+  const [reviewNumbers, setReviewNumbers] = useState<ReviewNumber>();
+
+  const loadReviewNumbers = async () => {
+    const reviewNumbers = await fetchReviewNumbers();
+    console.log(reviewNumbers);
+    setReviewNumbers(reviewNumbers);
+  };
 
   const loadBooks = async () => {
     setLoading(true);
@@ -51,6 +60,7 @@ export default function Books() {
 
   useEffect(() => {
     loadBooks();
+    loadReviewNumbers();
   }, []);
 
   if (loading) return (
@@ -89,7 +99,11 @@ export default function Books() {
                   }}>
                     {showReviews && reviews?.some(review => review.bookId === book.id)
                       ? <span>Hide</span>
-                      : <span>Show</span>
+                      : <span>
+                          {reviewNumbers && reviewNumbers[book.id]
+                            ? `Show ${reviewNumbers[book.id]}`
+                            : "None"}
+                        </span>
                     }
                   </td>
                   <td className="center"><button
@@ -109,7 +123,7 @@ export default function Books() {
                   <tr>
                     <td colSpan={6}>
                       {reviews.map(review => (
-                        <div>
+                        <div key={review.id}>
                           <div>Review by: {review.author} | Rating: {review.rating}</div>
                           <div className="mb-1"><em>"{review.text}"</em></div>
                         </div>
