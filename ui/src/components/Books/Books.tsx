@@ -88,7 +88,7 @@ export default function Books() {
           <tbody>
             {books.map(book => (
               <>
-                <tr key={book.id}>
+                <tr key={`books-${book.id}`}>
                   <td>{book.bookName}</td>
                   <td>{book.price}</td>
                   <td>{book.category}</td>
@@ -102,7 +102,7 @@ export default function Books() {
                       : <span>
                           {reviewNumbers && reviewNumbers[book.id]
                             ? `Show ${reviewNumbers[book.id]}`
-                            : "None"}
+                            : "-"}
                         </span>
                     }
                   </td>
@@ -120,7 +120,7 @@ export default function Books() {
                     && reviews.some(review => review.bookId === book.id)
                     && showReviews
                     &&
-                  <tr>
+                  <tr key={`reviews-${book.id}`}>
                     <td colSpan={6}>
                       {reviews.map(review => (
                         <div key={review.id}>
