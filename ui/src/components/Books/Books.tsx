@@ -98,16 +98,16 @@ export default function Books() {
                     toggleShowReviews();
                   }}>
                     {showReviews && reviews?.some(review => review.bookId === book.id)
-                      ? <span>Hide</span>
+                      ? <span className="mouse">Hide</span>
                       : <span>
                           {reviewNumbers && reviewNumbers[book.id]
-                            ? `Show ${reviewNumbers[book.id]}`
-                            : "-"}
+                            ? <span className="mouse">Show {reviewNumbers[book.id]}</span>
+                            : <span>-</span>}
                         </span>
                     }
                   </td>
                   <td className="center"><button
-                    className="std bold"
+                    className="std bold mouse"
                     onClick={async () => {
                       await deleteBook({bookId: book.id}, user.token);
                       await loadBooks();

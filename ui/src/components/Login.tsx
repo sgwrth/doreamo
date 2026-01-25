@@ -58,7 +58,6 @@ export default function Login() {
       {isLoggedIn(user) &&
         <div>
           <div>You are logged in!</div>
-          <div onClick={() => refreshTokens(user)}>[Refresh your token]</div>
         </div>}
     </div>
   );
