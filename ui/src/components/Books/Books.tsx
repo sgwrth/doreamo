@@ -58,7 +58,48 @@ export default function Books() {
     setShowReviews((showReviews) ? false : true);
   }
 
-  useEffect(() => {
+  function deleteBookTd(book: Book) {
+    return (
+      <td className="center"><button
+        className="std bold mouse"
+        onClick={async () => {
+          await deleteBook({bookId: book.id}, user.token);
+          await loadBooks();
+        }}
+      >
+       X
+     </button></td>
+    );
+  }
+
+  function showHideReviews(reviews: Review[], book: Book) {
+    return (
+      showReviews && reviews?.some(review => review.bookId === book.id)
+        ? <span className="mouse">Hide</span>
+        : <span>
+            {reviewNumbers && reviewNumbers[book.id]
+              ? <span className="mouse">Show {reviewNumbers[book.id]}</span>
+              : <span>-</span>}
+          </span>
+      )
+  }
+
+  function reviewsRow(book: Book, reviews: Review[]) {
+    return (
+      <tr key={`reviews-${book.id}`}>
+        <td colSpan={6}>
+          {reviews.map(review => (
+            <div key={review.id}>
+              <div>Review by: {review.author} | Rating: {review.rating}</div>
+              <div className="mb-1"><em>"{review.text}"</em></div>
+            </div>
+          ))}
+        </td>
+      </tr>
+    )
+  }
+
+  useEffect(() =>{
     loadBooks();
     loadReviewNumbers();
   }, []);
@@ -97,39 +138,14 @@ export default function Books() {
                     setReviews(await fetchReviews(book.id));
                     toggleShowReviews();
                   }}>
-                    {showReviews && reviews?.some(review => review.bookId === book.id)
-                      ? <span className="mouse">Hide</span>
-                      : <span>
-                          {reviewNumbers && reviewNumbers[book.id]
-                            ? <span className="mouse">Show {reviewNumbers[book.id]}</span>
-                            : <span>-</span>}
-                        </span>
-                    }
+                    {showHideReviews(reviews, book)}
                   </td>
-                  <td className="center"><button
-                    className="std bold mouse"
-                    onClick={async () => {
-                      await deleteBook({bookId: book.id}, user.token);
-                      await loadBooks();
-                    }}
-                  >
-                    X
-                  </button></td>
+                  {deleteBookTd(book)}
                 </tr>
                 {reviews.length > 0
                     && reviews.some(review => review.bookId === book.id)
                     && showReviews
-                    &&
-                  <tr key={`reviews-${book.id}`}>
-                    <td colSpan={6}>
-                      {reviews.map(review => (
-                        <div key={review.id}>
-                          <div>Review by: {review.author} | Rating: {review.rating}</div>
-                          <div className="mb-1"><em>"{review.text}"</em></div>
-                        </div>
-                      ))}
-                    </td>
-                  </tr>}
+                    && reviewsRow(book, reviews)}
               </>
             ))}
           </tbody>
