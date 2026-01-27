@@ -22,6 +22,8 @@ export default function Books() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [showReviews, setShowReviews] = useState<boolean>(false);
   const [reviewNumbers, setReviewNumbers] = useState<ReviewNumber>();
+  const [deletingBook, setDeletingBook] = useState<string | null>(null);
+  const [fetchingReviews, setFetchingReviews] = useState<string | null>(null);
 
   const loadReviewNumbers = async () => {
     const reviewNumbers = await fetchReviewNumbers();
@@ -58,18 +60,31 @@ export default function Books() {
     setShowReviews((showReviews) ? false : true);
   }
 
+  const handleDeleteBook = async (book: Book) => {
+    setDeletingBook(book.id);
+    await deleteBook({bookId: book.id}, user.token);
+    await loadBooks();
+    setDeletingBook(null);
+  }
+
   function deleteBookTd(book: Book) {
     return (
-      <td className="center"><button
-        className="std bold mouse"
-        onClick={async () => {
-          await deleteBook({bookId: book.id}, user.token);
-          await loadBooks();
-        }}
-      >
-       X
-     </button></td>
+      <td className="center">
+        <button
+            className="std bold mouse"
+            onClick={() => handleDeleteBook(book)}
+        >
+          X
+        </button>
+      </td>
     );
+  }
+
+  const handleToggleReviews = async (book: Book) => {
+    setFetchingReviews(book.id);
+    setReviews(await fetchReviews(book.id));
+    toggleShowReviews();
+    setFetchingReviews(null);
   }
 
   function showHideReviews(reviews: Review[], book: Book) {
@@ -110,6 +125,31 @@ export default function Books() {
     </div>
   )
 
+  function bookAndReviewsRows(books: Book[]) {
+    return (
+      <>
+        {books.map(book => (
+          <>
+            <tr key={`books-${book.id}`}>
+              <td>{book.bookName}</td>
+              <td>{book.price}</td>
+              <td>{book.category}</td>
+              <td>{book.author}</td>
+              <td onClick={() => handleToggleReviews(book)}>
+                {showHideReviews(reviews, book)}
+              </td>
+              {deleteBookTd(book)}
+            </tr>
+            {reviews.length > 0
+                && reviews.some(review => review.bookId === book.id)
+                && showReviews
+                && reviewsRow(book, reviews)}
+          </>
+        ))}
+      </>
+    );
+  }
+
   return (
     <>
       <div className="cell">
@@ -127,27 +167,7 @@ export default function Books() {
             </tr>
           </thead>
           <tbody>
-            {books.map(book => (
-              <>
-                <tr key={`books-${book.id}`}>
-                  <td>{book.bookName}</td>
-                  <td>{book.price}</td>
-                  <td>{book.category}</td>
-                  <td>{book.author}</td>
-                  <td onClick={async () => {
-                    setReviews(await fetchReviews(book.id));
-                    toggleShowReviews();
-                  }}>
-                    {showHideReviews(reviews, book)}
-                  </td>
-                  {deleteBookTd(book)}
-                </tr>
-                {reviews.length > 0
-                    && reviews.some(review => review.bookId === book.id)
-                    && showReviews
-                    && reviewsRow(book, reviews)}
-              </>
-            ))}
+            {bookAndReviewsRows(books)}
           </tbody>
         </table>
       </div>
