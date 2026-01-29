@@ -20,7 +20,7 @@ export default function Books() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [showReviews, setShowReviews] = useState<boolean>(false);
+  const [isShowReviews, setIsShowReviews] = useState<boolean>(false);
   const [reviewNumbers, setReviewNumbers] = useState<ReviewNumber>();
   const [deletingBook, setDeletingBook] = useState<string | null>(null);
   const [fetchingReviews, setFetchingReviews] = useState<string | null>(null);
@@ -57,7 +57,7 @@ export default function Books() {
   }
 
   function toggleShowReviews() {
-    setShowReviews((showReviews) ? false : true);
+    setIsShowReviews((isShowReviews) ? false : true);
   }
 
   const handleDeleteBook = async (book: Book) => {
@@ -89,7 +89,7 @@ export default function Books() {
 
   function showHideReviews(reviews: Review[], book: Book) {
     return (
-      showReviews && reviews?.some(review => review.bookId === book.id)
+      isShowReviews && reviews?.some(review => review.bookId === book.id)
         ? <span className="mouse">Hide</span>
         : <span>
             {reviewNumbers && reviewNumbers[book.id]
@@ -99,7 +99,7 @@ export default function Books() {
       )
   }
 
-  function reviewsRow(book: Book, reviews: Review[]) {
+  function reviewsContent(book: Book, reviews: Review[]) {
     return (
       <tr key={`reviews-${book.id}`}>
         <td colSpan={6}>
@@ -125,29 +125,41 @@ export default function Books() {
     </div>
   )
 
-  function bookAndReviewsRows(books: Book[]) {
+  function bookRows(book: Book) {
+    return (
+      <tr>
+        <td>{book.bookName}</td>
+        <td>{book.price}</td>
+        <td>{book.category}</td>
+        <td>{book.author}</td>
+        <td onClick={() => handleToggleReviews(book)}>
+          {showHideReviews(reviews, book)}
+        </td>
+        {deleteBookTd(book)}
+      </tr>
+    );
+  }
+
+  function reviewsRow(book: Book, reviews: Review[]) {
+    return (
+      reviews.length > 0
+          && reviews.some(review => review.bookId === book.id)
+          && isShowReviews
+          && reviewsContent(book, reviews)
+    );
+  }
+
+  function booksAndReviews(books: Book[], reviews: Review[]) {
     return (
       <>
-        {books.map(book => (
+        {books.map((book) => (
           <>
-            <tr key={`books-${book.id}`}>
-              <td>{book.bookName}</td>
-              <td>{book.price}</td>
-              <td>{book.category}</td>
-              <td>{book.author}</td>
-              <td onClick={() => handleToggleReviews(book)}>
-                {showHideReviews(reviews, book)}
-              </td>
-              {deleteBookTd(book)}
-            </tr>
-            {reviews.length > 0
-                && reviews.some(review => review.bookId === book.id)
-                && showReviews
-                && reviewsRow(book, reviews)}
+            {bookRows(book)}
+            {reviewsRow(book, reviews)}
           </>
         ))}
       </>
-    );
+    )
   }
 
   return (
@@ -167,7 +179,7 @@ export default function Books() {
             </tr>
           </thead>
           <tbody>
-            {bookAndReviewsRows(books)}
+            {booksAndReviews(books, reviews)}
           </tbody>
         </table>
       </div>
