@@ -21,6 +21,8 @@ export default function Books() {
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isShowReviews, setIsShowReviews] = useState<boolean>(false);
+  const [isShowCreateReview, setIsShowCreateReview] = useState<boolean>(false);
+  const [bookIdToReview, setBookIdToReview] = useState<string | null>(null);
   const [reviewNumbers, setReviewNumbers] = useState<ReviewNumber>();
   const [deletingBook, setDeletingBook] = useState<string | null>(null);
   const [fetchingReviews, setFetchingReviews] = useState<string | null>(null);
@@ -58,6 +60,9 @@ export default function Books() {
 
   function toggleShowReviews() {
     setIsShowReviews((isShowReviews) ? false : true);
+    if (reviews.length !== 0) {
+      setReviews([]);
+    }
   }
 
   const handleDeleteBook = async (book: Book) => {
@@ -93,10 +98,17 @@ export default function Books() {
         ? <span className="mouse">Hide</span>
         : <span>
             {reviewNumbers && reviewNumbers[book.id]
-              ? <span className="mouse">Show {reviewNumbers[book.id]}</span>
-              : <span>-</span>}
+              ? <span className="mouse">Show ({reviewNumbers[book.id]})</span>
+              : <span onClick={() => toggleShowCreateReviewRow(book.id)}>
+                  {(isShowCreateReview && bookIdToReview === book.id) ? "Close" : "Write"}
+                </span>}
           </span>
       )
+  }
+
+  function toggleShowCreateReviewRow(bookId: string) {
+    setBookIdToReview((bookIdToReview) ? null : bookId);
+    setIsShowCreateReview((isShowCreateReview) ? false : true);
   }
 
   function reviewsContent(book: Book, reviews: Review[]) {
@@ -142,11 +154,29 @@ export default function Books() {
 
   function reviewsRow(book: Book, reviews: Review[]) {
     return (
-      reviews.length > 0
+      <>
+        {reviews.length > 0
           && reviews.some(review => review.bookId === book.id)
           && isShowReviews
-          && reviewsContent(book, reviews)
+          && reviewsContent(book, reviews)}
+        {reviews.length === 0
+          && isShowCreateReview
+          && book.id === bookIdToReview
+          && createReviewRow()}
+      </>
     );
+  }
+
+  function createReviewRow() {
+    return (
+      <>
+        <tr>
+          <td colSpan={6}>
+            Hi there!
+          </td>
+        </tr>
+      </>
+    )
   }
 
   function booksAndReviews(books: Book[], reviews: Review[]) {
