@@ -12,6 +12,7 @@ import type { Review } from "../../types/Review";
 import { fetchReviews } from "../../services/fetchReviews";
 import fetchReviewNumbers from "../../services/fetchReviewNumbers";
 import type { ReviewNumber } from "../../types/ReviewNumber";
+import WriteReview from "./WriteReview";
 
 export default function Books() {
   const user = useAppSelector((state) => state.user);
@@ -21,7 +22,7 @@ export default function Books() {
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isShowReviews, setIsShowReviews] = useState<boolean>(false);
-  const [isShowCreateReview, setIsShowCreateReview] = useState<boolean>(false);
+  const [isShowWriteReview, setIsShowWriteReview] = useState<boolean>(false);
   const [bookIdToReview, setBookIdToReview] = useState<string | null>(null);
   const [reviewNumbers, setReviewNumbers] = useState<ReviewNumber>();
   const [deletingBook, setDeletingBook] = useState<string | null>(null);
@@ -99,16 +100,16 @@ export default function Books() {
         : <span>
             {reviewNumbers && reviewNumbers[book.id]
               ? <span className="mouse">Show ({reviewNumbers[book.id]})</span>
-              : <span onClick={() => toggleShowCreateReviewRow(book.id)}>
-                  {(isShowCreateReview && bookIdToReview === book.id) ? "Close" : "Write"}
+              : <span className="mouse" onClick={() => toggleShowWriteReviewRow(book.id)}>
+                  {(isShowWriteReview && bookIdToReview === book.id) ? "Close" : "Write"}
                 </span>}
           </span>
       )
   }
 
-  function toggleShowCreateReviewRow(bookId: string) {
+  function toggleShowWriteReviewRow(bookId: string) {
     setBookIdToReview((bookIdToReview) ? null : bookId);
-    setIsShowCreateReview((isShowCreateReview) ? false : true);
+    setIsShowWriteReview((isShowWriteReview) ? false : true);
   }
 
   function reviewsContent(book: Book, reviews: Review[]) {
@@ -139,7 +140,7 @@ export default function Books() {
 
   function bookRows(book: Book) {
     return (
-      <tr>
+      <>
         <td>{book.bookName}</td>
         <td>{book.price}</td>
         <td>{book.category}</td>
@@ -148,7 +149,7 @@ export default function Books() {
           {showHideReviews(reviews, book)}
         </td>
         {deleteBookTd(book)}
-      </tr>
+      </>
     );
   }
 
@@ -160,23 +161,11 @@ export default function Books() {
           && isShowReviews
           && reviewsContent(book, reviews)}
         {reviews.length === 0
-          && isShowCreateReview
+          && isShowWriteReview
           && book.id === bookIdToReview
-          && createReviewRow()}
+          && <WriteReview />}
       </>
     );
-  }
-
-  function createReviewRow() {
-    return (
-      <>
-        <tr>
-          <td colSpan={6}>
-            Hi there!
-          </td>
-        </tr>
-      </>
-    )
   }
 
   function booksAndReviews(books: Book[], reviews: Review[]) {
@@ -184,8 +173,10 @@ export default function Books() {
       <>
         {books.map((book) => (
           <>
-            {bookRows(book)}
-            {reviewsRow(book, reviews)}
+            <tr key={book.id}>
+              {bookRows(book)}
+            </tr>
+              {reviewsRow(book, reviews)}
           </>
         ))}
       </>
