@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { fetchBooks } from "../../services/fetchBooks";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { setUser } from "../../user/userSlice";
@@ -140,7 +140,7 @@ export default function Books() {
 
   function bookRows(book: Book) {
     return (
-      <>
+      <tr>
         <td>{book.bookName}</td>
         <td>{book.price}</td>
         <td>{book.category}</td>
@@ -149,7 +149,7 @@ export default function Books() {
           {showHideReviews(reviews, book)}
         </td>
         {deleteBookTd(book)}
-      </>
+      </tr>
     );
   }
 
@@ -172,12 +172,10 @@ export default function Books() {
     return (
       <>
         {books.map((book) => (
-          <>
-            <tr key={book.id}>
-              {bookRows(book)}
-            </tr>
-              {reviewsRow(book, reviews)}
-          </>
+          <Fragment key={book.id}>
+            {bookRows(book)}
+            {reviewsRow(book, reviews)}
+          </Fragment>
         ))}
       </>
     )
