@@ -54,6 +54,17 @@ select {
   padding: 0.5rem 0.75rem;
 }
 
+textarea {
+  border-radius: 0.5rem;
+  font-size: 1.0rem;
+  background-color: $primary;
+  margin-bottom: 0.5rem;
+  outline: none;
+  border: none;
+  color: $secondary;
+  padding: 0.5rem 0.75rem;
+}
+
 .block {
   display: block;
 }
@@ -76,9 +87,4 @@ select {
 
 .mouse {
   cursor: pointer;
-}
-
-.review {
-  width: 30.0rem;
-  height: 10.0rem;
 }
