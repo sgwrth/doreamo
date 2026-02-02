@@ -1,9 +1,14 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import type { PostReview } from "../../types/PostReview"
+import postReview from "../../services/postReview";
 
-export default function WriteReview() {
+type WriteReviewProps = {
+  bookId: string,
+};
+
+export default function WriteReview({ bookId }: WriteReviewProps) {
   const initialReview: PostReview = {
-    bookId: "",
+    bookId: bookId,
     rating: 5,
     text: "",
     author: "",
@@ -19,6 +24,7 @@ export default function WriteReview() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    postReview(review);
     console.log(review);
   };
 

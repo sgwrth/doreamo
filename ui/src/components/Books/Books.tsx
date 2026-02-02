@@ -163,7 +163,7 @@ export default function Books() {
         {reviews.length === 0
           && isShowWriteReview
           && book.id === bookIdToReview
-          && <WriteReview />}
+          && <WriteReview bookId={book.id}/>}
       </>
     );
   }
