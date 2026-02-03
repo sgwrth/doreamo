@@ -151,7 +151,7 @@ export default function Books() {
         {deleteBookTd(book)}
       </tr>
     );
-  }
+  };
 
   function reviewsRow(book: Book, reviews: Review[]) {
     return (
@@ -163,10 +163,15 @@ export default function Books() {
         {reviews.length === 0
           && isShowWriteReview
           && book.id === bookIdToReview
-          && <WriteReview bookId={book.id}/>}
+          && <WriteReview bookId={book.id} onUpdateReviews={(bookId) => {onUpdateReviews(bookId)}} />}
       </>
     );
   }
+
+  async function onUpdateReviews(bookId: string) {
+    setReviewNumbers(await fetchReviewNumbers());
+    toggleShowWriteReviewRow(bookId);
+  };
 
   function booksAndReviews(books: Book[], reviews: Review[]) {
     return (

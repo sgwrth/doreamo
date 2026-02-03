@@ -4,9 +4,10 @@ import postReview from "../../services/postReview";
 
 type WriteReviewProps = {
   bookId: string,
+  onUpdateReviews: (bookId: string) => void,
 };
 
-export default function WriteReview({ bookId }: WriteReviewProps) {
+export default function WriteReview({ bookId, onUpdateReviews }: WriteReviewProps) {
   const initialReview: PostReview = {
     bookId: bookId,
     rating: 5,
@@ -22,10 +23,11 @@ export default function WriteReview({ bookId }: WriteReviewProps) {
     });
   };
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    postReview(review);
+    await postReview(review);
     console.log(review);
+    onUpdateReviews(review.bookId);
   };
 
   return (
@@ -65,7 +67,7 @@ export default function WriteReview({ bookId }: WriteReviewProps) {
             rows={5}
             cols={30}
           ></textarea>
-          <button className="std mouse">Send</button>
+          <button className="std mouse" type="submit">Send</button>
         </form>
       </td>
     </tr>
