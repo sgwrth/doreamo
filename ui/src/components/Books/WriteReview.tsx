@@ -4,7 +4,7 @@ import postReview from "../../services/postReview";
 
 type WriteReviewProps = {
   bookId: string,
-  onUpdateReviews: (bookId: string) => void,
+  onUpdateReviews: () => void,
 };
 
 export default function WriteReview({ bookId, onUpdateReviews }: WriteReviewProps) {
@@ -27,7 +27,7 @@ export default function WriteReview({ bookId, onUpdateReviews }: WriteReviewProp
     event.preventDefault();
     await postReview(review);
     console.log(review);
-    onUpdateReviews(review.bookId);
+    onUpdateReviews();
   };
 
   return (

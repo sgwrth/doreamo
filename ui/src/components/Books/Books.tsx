@@ -21,7 +21,7 @@ export default function Books() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [isShowReviews, setIsShowReviews] = useState<boolean>(false);
+  const [expandedBookId, setExpandedBookId] = useState<string | null>(null);
   const [isShowWriteReview, setIsShowWriteReview] = useState<boolean>(false);
   const [bookIdToReview, setBookIdToReview] = useState<string | null>(null);
   const [reviewNumbers, setReviewNumbers] = useState<ReviewNumber>();
@@ -59,13 +59,6 @@ export default function Books() {
     }
   }
 
-  function toggleShowReviews() {
-    setIsShowReviews((isShowReviews) ? false : true);
-    if (reviews.length !== 0) {
-      setReviews([]);
-    }
-  }
-
   const handleDeleteBook = async (book: Book) => {
     setDeletingBook(book.id);
     await deleteBook({bookId: book.id}, user.token);
@@ -87,24 +80,39 @@ export default function Books() {
   }
 
   const handleToggleReviews = async (book: Book) => {
-    setFetchingReviews(book.id);
-    setReviews(await fetchReviews(book.id));
-    toggleShowReviews();
-    setFetchingReviews(null);
-  }
+    if (expandedBookId === book.id) {
+      setExpandedBookId(null);
+      setReviews([]);
+      return;
+    }
 
-  function showHideReviews(reviews: Review[], book: Book) {
+    setFetchingReviews(book.id);
+    const freshReviews = await fetchReviews(book.id);
+    setReviews(freshReviews);
+    setExpandedBookId(book.id);
+    setFetchingReviews(null);
+  };
+
+  function showHideReviews(book: Book) {
+    const isExpanded = expandedBookId === book.id;
+
+    if (isExpanded) {
+      return <span className="mouse">Hide</span>;
+    }
+
+    if (reviewNumbers && reviewNumbers[book.id]) {
+      return (
+        <span className="mouse">
+          Show ({reviewNumbers[book.id]})
+        </span>
+      );
+    }
+
     return (
-      isShowReviews && reviews?.some(review => review.bookId === book.id)
-        ? <span className="mouse">Hide</span>
-        : <span>
-            {reviewNumbers && reviewNumbers[book.id]
-              ? <span className="mouse">Show ({reviewNumbers[book.id]})</span>
-              : <span className="mouse" onClick={() => toggleShowWriteReviewRow(book.id)}>
-                  {(isShowWriteReview && bookIdToReview === book.id) ? "Close" : "Write"}
-                </span>}
-          </span>
-      )
+      <span className="mouse" onClick={() => toggleShowWriteReviewRow(book.id)}>
+        {isShowWriteReview && bookIdToReview === book.id ? "Close" : "Write"}
+      </span>
+    );
   }
 
   function toggleShowWriteReviewRow(bookId: string) {
@@ -146,7 +154,7 @@ export default function Books() {
         <td>{book.category}</td>
         <td>{book.author}</td>
         <td onClick={() => handleToggleReviews(book)}>
-          {showHideReviews(reviews, book)}
+          {showHideReviews(book)}
         </td>
         {deleteBookTd(book)}
       </tr>
@@ -156,22 +164,31 @@ export default function Books() {
   function reviewsRow(book: Book, reviews: Review[]) {
     return (
       <>
-        {reviews.length > 0
-          && reviews.some(review => review.bookId === book.id)
-          && isShowReviews
+        {expandedBookId === book.id
+          && reviews.length > 0
+          && reviews.some((review) => review.bookId === book.id)
           && reviewsContent(book, reviews)}
-        {reviews.length === 0
-          && isShowWriteReview
+
+        {isShowWriteReview
           && book.id === bookIdToReview
-          && <WriteReview bookId={book.id} onUpdateReviews={(bookId) => {onUpdateReviews(bookId)}} />}
+          && (
+            <WriteReview
+              bookId={book.id}
+              onUpdateReviews={() => onUpdateReviews()}
+            />
+          )}
       </>
     );
   }
 
-  async function onUpdateReviews(bookId: string) {
-    setReviewNumbers(await fetchReviewNumbers());
-    toggleShowWriteReviewRow(bookId);
-  };
+  async function onUpdateReviews() {
+    const newCounts = await fetchReviewNumbers();
+    setReviewNumbers(newCounts);
+    setIsShowWriteReview(false);
+    setBookIdToReview(null);
+    setExpandedBookId(null);
+    setReviews([]);
+  }
 
   function booksAndReviews(books: Book[], reviews: Review[]) {
     return (
